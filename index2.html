@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Formulir Pendaftaran Mahasiswa Baru</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    height: 100vh;
+    overflow-x: hidden;
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    background: url('anime moon landscape.JPG') no-repeat center center;
+    background-size: cover;
+    background-attachment: scroll;
+  }
+
+  .wind-overlay {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    animation: sway 5s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  @keyframes sway {
+    0%   { transform: translateX(0px) rotate(0deg); }
+    50%  { transform: translateX(1px) rotate(0.2deg); }
+    100% { transform: translateX(0px) rotate(0deg); }
+  }
+
+  canvas {
+    position: absolute;
+    top: 0; left: 0;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 760px;
+    margin: 60px auto;
+    padding: 22px;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 10px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 22px;
+    margin: 0 0 6px 0;
+    letter-spacing: 0.6px;
+  }
+
+  p.subtitle {
+    text-align: center;
+    margin: 0 0 18px 0;
+    font-size: 13px;
+    color: #444;
+  }
+
+  form {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    gap: 12px 18px;
+    align-items: center;
+  }
+
+  label { font-size: 14px; }
+
+  input[type="text"],
+  input[type="tel"],
+  input[type="email"],
+  input[type="date"],
+  select,
+  textarea {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1.6px solid #bdbdbd;
+    border-radius: 6px;
+    font-size: 14px;
+  }
+
+  textarea {
+    min-height: 90px;
+    resize: vertical;
+  }
+
+  .radio-group {
+    display: flex;
+    gap: 16px;
+  }
+
+  .buttons {
+    grid-column: 1 / -1;
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 8px;
+  }
+
+  button {
+    padding: 8px 18px;
+    border-radius: 6px;
+    border: 1px solid #8c8c8c;
+    background: #f3f3f3;
+    cursor: pointer;
+    font-size: 14px;
+  }
+
+  button.primary {
+    background: #2b7cff;
+    color: white;
+    border-color: #2166d6;
+  }
+
+  #musicButton {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(43, 124, 255, 0.9);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 55px;
+    height: 55px;
+    font-size: 22px;
+    cursor: pointer;
+    z-index: 3;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  }
+
+  #musicButton:hover {
+    background: rgba(30, 100, 220, 1);
+  }
+
+  @media (max-width:640px){
+    form { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="leaves"></canvas>
+<div class="wind-overlay"></div>
+
+<!-- Musik utama -->
+<audio id="bgMusic" loop>
+  <source src="Monolog.mp3" type="audio/mpeg">
+</audio>
+
+<!-- Efek suara angin lembut -->
+<audio id="windSound" loop>
+  <source src="wind.mp3" type="audio/mpeg">
+</audio>
+
+<button id="musicButton" title="Putar musik">🎵</button>
+
+<div class="container">
+  <h1>FORMULIR PENDAFTARAN MAHASISWA BARU</h1>
+  <p class="subtitle">Tahun Akademik 2025/2026</p>
+
+  <form id="pendaftaran" onsubmit="return handleSubmit(event)">
+    <label for="no_pendaftaran">No. Pendaftaran :</label>
+    <input id="no_pendaftaran" name="no_pendaftaran" type="text" required>
+
+    <label for="program_studi">Program Studi :</label>
+    <select id="program_studi" name="program_studi" required>
+      <option value="">-- Pilih Jurusan --</option>
+      <option value="ti">Teknik Informatika</option>
+      <option value="si">Sistem Informasi</option>
+      <option value="manajemen">Manajemen</option>
+      <option value="akuntansi">Akuntansi</option>
+    </select>
+
+    <label for="nama">Nama :</label>
+    <input id="nama" name="nama" type="text" required>
+
+    <label>Jenis Kelamin :</label>
+    <div class="radio-group">
+      <label><input type="radio" name="jk" value="L" required> Laki-laki</label>
+      <label><input type="radio" name="jk" value="P"> Perempuan</label>
+    </div>
+
+    <label for="tempat_lahir">Tempat Lahir :</label>
+    <input id="tempat_lahir" name="tempat_lahir" type="text" required>
+
+    <label for="tanggal_lahir">Tanggal Lahir :</label>
+    <input id="tanggal_lahir" name="tanggal_lahir" type="date" required>
+
+    <label for="alamat">Alamat :</label>
+    <textarea id="alamat" name="alamat"></textarea>
+
+    <label for="email">E-mail :</label>
+    <input id="email" name="email" type="email">
+
+    <div class="buttons">
+      <button type="submit" class="primary">Daftarkan</button>
+      <button type="reset">Reset</button>
+    </div>
+  </form>
+</div>
+
+<script>
+// Efek daun
+const canvas = document.getElementById('leaves');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+const leaves = [];
+for (let i = 0; i < 30; i++) {
+  leaves.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    size: Math.random() * 15 + 10,
+    speedX: Math.random() * 0.5 + 0.2,
+    speedY: Math.random() * 0.5 + 0.3,
+    angle: Math.random() * 360,
+  });
+}
+
+function drawLeaves() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  for (let leaf of leaves) {
+    ctx.save();
+    ctx.translate(leaf.x, leaf.y);
+    ctx.rotate((leaf.angle * Math.PI) / 180);
+    ctx.fillStyle = 'rgba(50,205,50,0.6)';
+    ctx.beginPath();
+    ctx.ellipse(0, 0, leaf.size / 2, leaf.size / 3, 0, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.restore();
+
+    leaf.x += leaf.speedX;
+    leaf.y += leaf.speedY;
+    leaf.angle += 0.3;
+
+    if (leaf.x > canvas.width) leaf.x = -leaf.size;
+    if (leaf.y > canvas.height) leaf.y = -leaf.size;
+  }
+  requestAnimationFrame(drawLeaves);
+}
+drawLeaves();
+
+// Musik & efek angin
+const music = document.getElementById("bgMusic");
+const wind = document.getElementById("windSound");
+const button = document.getElementById("musicButton");
+let playing = false;
+
+button.addEventListener("click", () => {
+  if (!playing) {
+    music.play();
+    wind.volume = 0.3;
+    wind.play();
+    button.textContent = "⏸️";
+    button.title = "Hentikan musik";
+  } else {
+    music.pause();
+    wind.pause();
+    button.textContent = "🎵";
+    button.title = "Putar musik";
+  }
+  playing = !playing;
+});
+
+function handleSubmit(e){
+  e.preventDefault();
+  const f = e.target;
+  const data = Object.fromEntries(new FormData(f).entries());
+  alert(`Pendaftaran berhasil!\nNama: ${data.nama}\nProdi: ${data.program_studi}`);
+  f.reset();
+  return false;
+}
+</script>
+</body>
+</html>
